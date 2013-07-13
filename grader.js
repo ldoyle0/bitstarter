@@ -16,8 +16,9 @@ var assertFileExists = function(infile) {
     }
     return instr;
 };
-var checkUrl = function() {
- 
+var checkUrl = function(url) {
+    return rest.get(url).on('complete', checkHtmlFile);
+};
 
 var cheerioHtmlFile = function(htmlfile) {
     return cheerio.load(fs.readFileSync(htmlfile));
@@ -49,7 +50,7 @@ if(require.main == module) {
     program
 	.option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
 	.option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
-	.option('u, --url <url>', 'Path to url', clone(asserFileExists), URL_DEFAULT)
+	.option('u, --url <url>', 'Path to url', URL_DEFAULT)
 	.parse(process.argv);
     var checkJson = checkHtmlFile(program.file, program.checks);
     var outJson = JSON.stringify(checkJson, null, 4);
